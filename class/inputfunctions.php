@@ -3,6 +3,7 @@ require_once "/var/www/gravity/class/vars.php";
 require_once "$php_dir/class/connection.php";
 
 function validEmail($email)
+    //found function, atribution
 {
    $isValid = true;
    $atIndex = strrpos($email, "@");
@@ -67,66 +68,61 @@ function validEmail($email)
    return $isValid;
 }
 
-function register($name, $password, $email) {
-    $name = trim($name);
-    $name = stripslashes($name);
-    $password = stripslashes($password);
-    $email = stripcslashes($email);
-    $name = mysql_real_escape_string($name);
-    $password = mysql_real_escape_string($password);
-    $email = mysql_real_escape_string($email);
-    $isValid = validEmail($email);
-    $hash = sha1($password);
-    $sql="SELECT * FROM users WHERE name='$name'";
-    $result=mysql_query($sql);
-    $count=mysql_num_rows($result);
-    $sql="SELECT * FROM users WHERE email='$email'";
-    $result=mysql_query($sql);
-    $count2=mysql_num_rows($result);
-    //require_once('/var/www/class/recaptchalib.php');
-    //$privatekey = "6Lf-0roSAAAAACLlnWBuUhOKwuM9w8zpozSuLIpw";
-    //$resp = recaptcha_check_answer ($privatekey,
-    //                            $_SERVER["REMOTE_ADDR"],
-    //                            $_POST["recaptcha_challenge_field"],
-    //                            $_POST["recaptcha_response_field"]);
+function register1($name, $passwd1, $rpasswd1, $agree) {
+   $slt1 = 'enter your salt here';
+   $hash1 = hash(sha512, $slt1.$passwd1);
+   for ($i = 0; $i < 10; $i++) {
+      $hash1 = hash(sha512, $hash1);
+   }
+   $rhash1 = hash(sha512, $slt1.$rpasswd1);
+   for ($i = 0; $i < 10; $i++) {
+      $rhash1 = hash(sha512, $rhash1);
+   }
+   if ($hash1 != $rhash1) {
+      $error = 3; // The password and the retyped password do not match
+   }
+   if ($agree == 'yes') {
+   } else {
+      $error = 4; //Please Agree to the Terms of Use and Privacy Policy to continue
+   }
+   $sql="SELECT * FROM users WHERE name='$name'";
+   $result=mysql_query($sql);
+   $count=mysql_num_rows($result);
+   //require_once('/var/www/class/recaptchalib.php');
+   //$privatekey = "you private recaptcha key";
+   //$resp = recaptcha_check_answer ($privatekey,
+   //                            $_SERVER["REMOTE_ADDR"],
+   //                            $_POST["recaptcha_challenge_field"],
+   //                            $_POST["recaptcha_response_field"]);
 
-    //if ($resp->is_valid) {
-      //die ("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
-      //     "(reCAPTCHA said: " . $resp->error . ")");
-        if ($isValid == true) {
-            if($count==0) {
-               if($count2==0) {
-                  if(!strstr($name,' ')) {
-                     $sql="INSERT INTO users (user_id, name, passwd, email) VALUES (NULL, '$name', '$hash', '$email')";
-                     $result=mysql_query($sql)
-                         or die(mysql_error());
-                     $_SESSION['user_logged'] = $name;
-                     $success = 2;
-                     $to = $email;
-                     $subject = "Registration";
-                     $message = " Welcome to -blank-! \n You have successfully completed registration at -blank-. Thanks for registering. \n Your Username is: $name \n http://-blank- \n\n\n -------------------------------------------------------- \n Disclaimer: Internet communications are not secure, and therefore 1stvote.com does not accept legal responsibility for the contents of this message. However, 1stvote.com reserves the right to monitor the transmission of this message and to take corrective action against any misuse or abuse of its e-mail system or other components of its network. The information contained in this e-mail is confidential and may be legally privileged. It is intended solely for the addressee. If you are not the intended recipient, any disclosure, copying, distribution, or any action or act of forbearance taken in reliance on it, is prohibited and may be unlawful. Any views expressed in this e-mail are those of the individual sender. The recipient should check this e-mail for the presence of viruses. 1stvote.com accepts no liability for any damage caused by any viruses transmitted by this e-mail.";
-                     $headers = 'From: noreply@-blank-' . "\r\n" .
-                     'Reply-To: noreply@-blank-' . "\r\n" .
-                     'X-Mailer: PHP/' . phpversion();
-                     mail($to, $subject, $message, $headers);
-                     $success = 2;
-                  } else {
-                     $success = 7;
-                  }
-               } else {
-                  $success=8;
-               }
+   //if ($resp->is_valid) {
+     //die ("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
+     //     "(reCAPTCHA said: " . $resp->error . ")");
+   if ($error == 3) {
+      $success = 'The password and the retyped password do not match';
+   } else {
+      if($count!=0) {
+         $success = 'This Username is already in use';
+      } else {
+         if ($error == 4) {
+            $success = 'Please Agree to the Terms of Use and Privacy Policy to continue';
+         } else {
+            if(!strstr($name,' ')) {
+               $sql="INSERT INTO gravity_users (user_id, name, passwd1) VALUES (NULL, '$name', '$hash1')";
+               $result=mysql_query($sql)
+                   or die(mysql_error());
+               $success = 2;
             } else {
-                $success = 1;
+               $success = 'There is a space in your username';
             }
-        } else {
-            $success = 4;
-        }
-    //} else {
-    //    $success = 5;
-    //}
+         }
+      }
+   }
+   //} else {
+   //    $success = 5; //recaptcha was not correct
+   //}
 
-    return $success;
+   return $success;
 }
 
 function checkProfileEdit($name) {
@@ -144,7 +140,7 @@ function checkProfileEdit($name) {
         list($width, $height, $type, $attr) = getimagesize($_FILES['image_filename']['tmp_name']);
         if ($type == 2) {
             if (move_uploaded_file($_FILES['image_filename']['tmp_name'], $ImageName)) {
-                $sql = "UPDATE cms_users SET photo='$name' WHERE name='$name'";
+                $sql = "UPDATE gravity_users SET photo='$name' WHERE name='$name'";
                 $result = mysql_query($sql)
                     or die("Invalid query: " . mysql_error());
             }
@@ -287,7 +283,7 @@ function checkProfileEdit($name) {
     if ($website == 'http://') {
 	$website = '';
     }
-    $sql = "UPDATE cms_users SET email='$email', about='$about', facebook='$facebook', twitter='$twitter', website='$website', emails='$emails' WHERE name='$name'";
+    $sql = "UPDATE gravity_users SET email='$email', about='$about', facebook='$facebook', twitter='$twitter', website='$website', emails='$emails' WHERE name='$name'";
     $result = mysql_query($sql)
         or die("Invalid query: " . mysql_error());
 
@@ -727,12 +723,12 @@ function submitReview($product_id, $rating, $title, $review, $user_id) {
 }
 
 function addFriend($name, $friend) {
-    $sql = "SELECT * FROM cms_users WHERE name='$name'";
+    $sql = "SELECT * FROM gravity_users WHERE name='$name'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $row = mysql_fetch_array($result);
     $user_id = $row['user_id'];
-    $sql = "SELECT * FROM cms_users WHERE name='$friend'";
+    $sql = "SELECT * FROM gravity_users WHERE name='$friend'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $row = mysql_fetch_array($result);
@@ -751,7 +747,7 @@ function addFriend($name, $friend) {
         $sql = "INSERT INTO friends (user_id, friend_level, friend) VALUES ('$user_id', '1', '$friend_id')";
         $result = mysql_query($sql)
             or die(mysql_error());
-        $sql = "SELECT * FROM cms_users WHERE user_id='$friend_id'";
+        $sql = "SELECT * FROM gravity_users WHERE user_id='$friend_id'";
         $result = mysql_query($sql)
             or die(mysql_error());
         $row = mysql_fetch_array($result);
@@ -783,12 +779,12 @@ function addFriend($name, $friend) {
 }
 
 function removeFriend($name, $friend) {
-    $sql = "SELECT * FROM cms_users WHERE name='$name'";
+    $sql = "SELECT * FROM gravity_users WHERE name='$name'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $row = mysql_fetch_array($result);
     $user_id = $row['user_id'];
-    $sql = "SELECT * FROM cms_users WHERE name='$friend'";
+    $sql = "SELECT * FROM gravity_users WHERE name='$friend'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $row = mysql_fetch_array($result);

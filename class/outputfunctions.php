@@ -3,7 +3,7 @@ require_once "/var/www/gravity/class/vars.php";
 require_once "$php_dir/class/connection.php";
 
 function varProfilePhoto($name) {
-    $sql="SELECT * FROM cms_users WHERE name='$name'";
+    $sql="SELECT * FROM gravity_users WHERE name='$name'";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     if ($row['photo']) {
@@ -15,7 +15,7 @@ function varProfilePhoto($name) {
 }
 
 function displayProfileVar($name) {
-    $sql="SELECT * FROM cms_users WHERE name='$name'";
+    $sql="SELECT * FROM gravity_users WHERE name='$name'";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     $user_id = $row['user_id'];
@@ -38,7 +38,7 @@ function displayProfileVar($name) {
     if ($_SESSION['user_logged']) {
         $user_logged = $_SESSION['user_logged'];
         $user_id = $row['user_id'];
-        $sql2 = "SELECT * FROM cms_users WHERE name ='$user_logged'";
+        $sql2 = "SELECT * FROM gravity_users WHERE name ='$user_logged'";
         $result2 = mysql_query($sql2)
             or die(mysql_error());
         $row2 = mysql_fetch_array($result2);
@@ -62,7 +62,7 @@ function displayProfileVar($name) {
     if ($_SESSION['user_logged']) {
         $user_logged = $_SESSION['user_logged'];
         $user_id = $row['user_id'];
-        $sql2 = "SELECT * FROM cms_users WHERE name ='$user_logged'";
+        $sql2 = "SELECT * FROM gravity_users WHERE name ='$user_logged'";
         $result2 = mysql_query($sql2)
             or die(mysql_error());
         $row2 = mysql_fetch_array($result2);
@@ -143,7 +143,7 @@ function displayProductVar($product_id) {
     $reviews = mysql_num_rows($result_review);
         $votes = $row['votes'];
         if ($_SESSION['user_logged']) {
-            $sql1="SELECT * FROM cms_users WHERE name='".$_SESSION['user_logged']."'";
+            $sql1="SELECT * FROM gravity_users WHERE name='".$_SESSION['user_logged']."'";
             $result1=mysql_query($sql1);
             $row1 = mysql_fetch_array($result1);
             $user_id = $row1['user_id'];
@@ -159,7 +159,7 @@ function displayProductVar($product_id) {
             $vote_disp = 'Vote_login';
         }
         if ($_SESSION['user_logged']) {
-            $sql1="SELECT * FROM cms_users WHERE name='".$_SESSION['user_logged']."'";
+            $sql1="SELECT * FROM gravity_users WHERE name='".$_SESSION['user_logged']."'";
             $result1=mysql_query($sql1)
                 or die(mysql_error());
             $row1 = mysql_fetch_array($result1);
@@ -201,7 +201,7 @@ function displayProductVar($product_id) {
             }
         }
         
-        $sql2 = "SELECT * FROM cms_users WHERE user_id ='".$row['user_id']."'";
+        $sql2 = "SELECT * FROM gravity_users WHERE user_id ='".$row['user_id']."'";
         $result2 = mysql_query($sql2)
             or die(mysql_error());
         $row2 = mysql_fetch_array($result2);
@@ -233,12 +233,12 @@ function displayProductVar($product_id) {
 }
 
 function displayComments($product_id) {
-    $sql = "SELECT * FROM cms_comments WHERE product_id = '$product_id'";
+    $sql = "SELECT * FROM gravity_comments WHERE product_id = '$product_id'";
     $result = mysql_query($sql)
         or die(mysql_error());
     while ($row = mysql_fetch_array($result)) {
         $comment_id = $row['comment_id'];
-        $sql1="SELECT name FROM cms_users WHERE user_id='".$row['user_id']."'";
+        $sql1="SELECT name FROM gravity_users WHERE user_id='".$row['user_id']."'";
         $result1=mysql_query($sql1)
             or die(mysql_error());
         $row1 = mysql_fetch_array($result1);
@@ -246,7 +246,7 @@ function displayComments($product_id) {
         $level = $row['level'];
         $comment_votes = $row['comment_votes'];
         // echo image tag with appropriate photo if it exists
-        $sql3="SELECT * FROM cms_users WHERE name='$name'";
+        $sql3="SELECT * FROM gravity_users WHERE name='$name'";
         $result3=mysql_query($sql3);
         $row3 = mysql_fetch_array($result3);
         if ($row3['photo']) {
@@ -256,7 +256,7 @@ function displayComments($product_id) {
         }
         // end echoing photo
         if ($_SESSION['user_logged']) {
-            $sql1="SELECT * FROM cms_users WHERE name='".$_SESSION['user_logged']."'";
+            $sql1="SELECT * FROM gravity_users WHERE name='".$_SESSION['user_logged']."'";
             $result1=mysql_query($sql1)
                 or die(mysql_error());
             $row1 = mysql_fetch_array($result1);
@@ -279,7 +279,7 @@ function displayComments($product_id) {
             $vote = 'login';
         }
         if ($_SESSION['user_logged']) {
-            $sql1="SELECT * FROM cms_users WHERE name='".$_SESSION['user_logged']."'";
+            $sql1="SELECT * FROM gravity_users WHERE name='".$_SESSION['user_logged']."'";
             $result1=mysql_query($sql1)
                 or die(mysql_error());
             $row1 = mysql_fetch_array($result1);
@@ -344,7 +344,7 @@ function displayReviewsVar($product_id) {
         or die(mysql_error());
     while ($row = mysql_fetch_array($result)) {
         echo '<div class="review">';
-        $sql1="SELECT name FROM cms_users WHERE user_id='".$row['user_id']."'";
+        $sql1="SELECT name FROM gravity_users WHERE user_id='".$row['user_id']."'";
         $result1=mysql_query($sql1)
             or die(mysql_error());
         $row1 = mysql_fetch_array($result1);
@@ -368,7 +368,7 @@ function displayReviewsVar($product_id) {
         }
         //rating user image
         // echo image tag with appropriate photo if it exists
-        $sql3="SELECT * FROM cms_users WHERE name='$name'";
+        $sql3="SELECT * FROM gravity_users WHERE name='$name'";
         $result3=mysql_query($sql3);
         $row3 = mysql_fetch_array($result3);
         if ($row3['photo']) {
@@ -381,7 +381,7 @@ function displayReviewsVar($product_id) {
 }
 
 function displayFriends($name) {
-    $sql1="SELECT * FROM cms_users WHERE name='$name'";
+    $sql1="SELECT * FROM gravity_users WHERE name='$name'";
     $result1=mysql_query($sql1)
         or die(mysql_error());
     $row1 = mysql_fetch_array($result1);
@@ -394,12 +394,12 @@ function displayFriends($name) {
         $friend_list = 'No Friends to display';
     } else {
         while ($row = mysql_fetch_array($result)) {
-            $sql2 = "SELECT * from cms_users WHERE user_id ='".$row['friend']."'";
+            $sql2 = "SELECT * from gravity_users WHERE user_id ='".$row['friend']."'";
             $result2 = mysql_query($sql2)
                 or die(mysql_error());
             $row2 = mysql_fetch_array($result2);
             $friend_name = $row2['name'];
-            $sql2="SELECT * FROM cms_users WHERE name='$friend_name'";
+            $sql2="SELECT * FROM gravity_users WHERE name='$friend_name'";
             $result2=mysql_query($sql2)
                 or die(mysql_error());
             $row2 = mysql_fetch_array($result2);
@@ -413,7 +413,8 @@ function displayFriends($name) {
 }
 
 function getPaginationString($page, $totalitems, $targetpage)
-{               
+{          
+        //found function and edited, atribution
         //defaults
         $limit = 21;
         if ($_GET['timespan']) {
@@ -566,7 +567,7 @@ function getPaginationString($page, $totalitems, $targetpage)
 }
 
 function getNameFromUID($user_id) {
-    $sql = "SELECT name FROM cms_users WHERE user_id='$user_id'";
+    $sql = "SELECT name FROM gravity_users WHERE user_id='$user_id'";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
     $name = $row['name'];
@@ -615,12 +616,5 @@ function getBlogIdFromTitle($title) {
     }
 }
 
-function setBack() {
-    
-}
-
-function getBack() {
-    
-}
 
 ?>

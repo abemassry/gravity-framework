@@ -3,7 +3,7 @@ require_once 'vars.php';
 require_once 'connection.php';
 
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS gravity_users (
     user_id int(11) NOT NULL auto_increment,
     email varchar(255) NOT NULL default '',
     passwd varchar(255) NOT NULL default '',
@@ -25,7 +25,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
     
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS messages (
+CREATE TABLE IF NOT EXISTS gravity_messages (
     message_id int(11) NOT NULL auto_increment,
     message_str varchar(255) NOT NULL default '',
     from_user_id int(11),
@@ -43,7 +43,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
 
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS comments (
+CREATE TABLE IF NOT EXISTS gravity_comments (
     comment_id int(11) NOT NULL auto_increment,
     item_id int(11) NOT NULL default '0',
     user_id int(11),
@@ -59,7 +59,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
 
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS reg_codes (
+CREATE TABLE IF NOT EXISTS gravity_reg_codes (
     id int(11) NOT NULL AUTO_INCREMENT,
     code varchar(255) NOT NULL default '',
     count int(11) NOT NULL DEFAULT  '0',
@@ -70,7 +70,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
     
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS block (
+CREATE TABLE IF NOT EXISTS gravity_block_site (
     id int(11) NOT NULL AUTO_INCREMENT,
     site varchar(255) NOT NULL default '',
     PRIMARY KEY (id)
@@ -80,7 +80,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
     
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS blog (
+CREATE TABLE IF NOT EXISTS gravity_blog (
     id int(11) NOT NULL AUTO_INCREMENT,
     title varchar(255) NOT NULL default '',
     body longblob NOT NULL default '',
@@ -94,7 +94,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
     
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS blog_comments (
+CREATE TABLE IF NOT EXISTS gravity_blog_comments (
     comment_id int(11) NOT NULL AUTO_INCREMENT,
     blod_id int(11) NOT NULL default '0',
     user_id int(11),
@@ -108,7 +108,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
 
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS items (
+CREATE TABLE IF NOT EXISTS gravity_items (
     item_id int(11) NOT NULL auto_increment,
     user_id int(11),
     front_paged tinyint(1) NOT NULL default '0',
@@ -133,7 +133,7 @@ $result = mysql_query($sql)
     or die(mysql_error());
     
 $sql = <<<EOS
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE IF NOT EXISTS gravity_reviews (
     review_id int(11) NOT NULL auto_increment,
     item_id int(11),
     user_id int(11),

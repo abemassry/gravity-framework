@@ -4,6 +4,33 @@ require_once "$php_dir/class/connection.php";
 //require_once "$php_dir/class/inputfunctions.php";
 //require_once "$php_dir/class/outputfunctions.php";
 
+function displayHTMLHead() {
+    $html_dir = getHTMLDir();
+    $display = <<< EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Mass Industries</title>
+    <link rel='stylesheet' type='text/css' href='$html_dir/design/960_16_col.css' />
+    <link rel='stylesheet' type='text/css' href='$html_dir/design/style.css' />
+    <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <![endif]-->
+    <!--[if IE 7]>
+    <link rel='stylesheet' type='text/css' href='$html_dir/design/ie7.css' />
+    <![endif]-->
+    <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="js/formee.js"></script>
+    <link rel="stylesheet" href="css/form-structure.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/form-style.css" type="text/css" media="screen" />
+    <link rel="shortcut icon" href="/design/favicon1.ico" />
+</head>
+<body>
+<div class="container_16">
+EOF;
+return $display;
+}
+
 function displaySearch() {
 $display = <<< EOF
     <div id="search">
