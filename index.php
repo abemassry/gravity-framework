@@ -1,9 +1,5 @@
 <?php session_start();
 require_once "/var/www/class/vars.php";
-require_once "$php_dir/class/displayfunctions.php";
-require_once "$php_dir/class/inputfunctions.php";
-require_once "$php_dir/class/outputfunctions.php";
-
 
 if ($_POST['emailpressed']) {
     $email = mysql_real_escape_string(trim(stripslashes($_POST['email'])));

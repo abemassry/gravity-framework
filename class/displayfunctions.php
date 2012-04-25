@@ -1,9 +1,4 @@
 <?php
-require_once "/var/www/gravity/class/vars.php";
-require_once "$php_dir/class/connection.php";
-//require_once "$php_dir/class/inputfunctions.php";
-//require_once "$php_dir/class/outputfunctions.php";
-
 function displayHTMLHead() {
     $html_dir = getHTMLDir();
     $display = <<< EOF

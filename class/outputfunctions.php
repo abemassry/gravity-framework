@@ -1,6 +1,4 @@
 <?php
-require_once "/var/www/gravity/class/vars.php";
-require_once "$php_dir/class/connection.php";
 
 function varProfilePhoto($name) {
     $sql="SELECT * FROM gravity_users WHERE name='$name'";

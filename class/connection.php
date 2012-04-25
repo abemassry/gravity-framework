@@ -1,5 +1,4 @@
 <?php
-require_once 'vars.php';
 
 define('SQL_HOST',$sql_host);
 //fvote.db.6279086.hostedresource.com

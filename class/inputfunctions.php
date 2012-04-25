@@ -1,6 +1,4 @@
 <?php
-require_once "/var/www/gravity/class/vars.php";
-require_once "$php_dir/class/connection.php";
 
 function validEmail($email)
     //found function, atribution
@@ -85,7 +83,7 @@ function register1($name, $passwd1, $rpasswd1, $agree) {
    } else {
       $error = 4; //Please Agree to the Terms of Use and Privacy Policy to continue
    }
-   $sql="SELECT * FROM users WHERE name='$name'";
+   $sql="SELECT * FROM gravity_users WHERE name='$name'";
    $result=mysql_query($sql);
    $count=mysql_num_rows($result);
    //require_once('/var/www/class/recaptchalib.php');
@@ -308,7 +306,7 @@ function fbLogin($cookie) {
          $hash = sha1(rand());
          if (!$user || !$fb_email) {
          } else {
-            $sql="INSERT INTO users (user_id, name, passwd, email) VALUES (NULL, '$user', '$hash', '$fb_email')";
+            $sql="INSERT INTO gravity_users (user_id, name, passwd, email) VALUES (NULL, '$user', '$hash', '$fb_email')";
             $result=mysql_query($sql)
                or die(mysql_error());
          }
@@ -324,7 +322,7 @@ function checkLogin($name, $password) {
     $name = mysql_real_escape_string($name);
     $password = mysql_real_escape_string($password);
     $hash = sha1($password);
-    $sql="SELECT * FROM users WHERE name='$name' and passwd='$hash'";
+    $sql="SELECT * FROM gravity_users WHERE name='$name' and passwd='$hash'";
     $result=mysql_query($sql);
     $count=mysql_num_rows($result);
     if($count==1){
@@ -341,7 +339,7 @@ function checkLogin($name, $password) {
 }
 
 function editProfile($name) {
-    $sql="SELECT * FROM users WHERE name='$name'";
+    $sql="SELECT * FROM gravity_users WHERE name='$name'";
     $result=mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
         $email = $row['email'];
@@ -353,7 +351,7 @@ function editProfile($name) {
         $website = $row['website'];
     }
     if ($_SESSION['user_logged']) {
-                $sql2 = "SELECT * FROM users WHERE name ='".$_SESSION['user_logged']."'";
+                $sql2 = "SELECT * FROM gravity_users WHERE name ='".$_SESSION['user_logged']."'";
                 $result2 = mysql_query($sql2)
                     or die(mysql_error());
                 $row2 = mysql_fetch_array($result2);
@@ -547,10 +545,10 @@ function saveImages($results, $localPath)
 
 function getMoreImages($url, $localPath, $rnd) {
    $url = escapeshellarg($url);
-   $connection = ssh2_connect('popcopy.webhop.org', 22);
-   ssh2_auth_password($connection, 'spider', 'digibull');
-   $stream = ssh2_exec($connection, 'sh /home/spider/img1v/img1v.sh "'.$url.'" "'.$rnd.'"');
-   $path = "http://popcopy.webhop.org:8000/img1v/$rnd.jpg";
+//   $connection = ssh2_connect('', 22);
+//   ssh2_auth_password($connection, '', '');
+//  $stream = ssh2_exec($connection, ' "'.$url.'" "'.$rnd.'"');
+//  $path = "";
    $localFile = "/var/www/product/img1v/$rnd.jpg";
    $x=0;
    $sec = 10; // number of seconds to wait, retry once per sec
@@ -627,13 +625,13 @@ function getPrice2($page_content) {
 }
 
 function formReview($product_id, $user_id) {
-    $sql = "SELECT * FROM reviews WHERE user_id='$user_id' AND product_id='$product_id'";
+    $sql = "SELECT * FROM gravity_reviews WHERE user_id='$user_id' AND product_id='$product_id'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $count = mysql_num_rows($result);
     if ($count == 0) {
         require_once('/var/www/class/recaptchalib.php');
-        $publickey = "6Lf-0roSAAAAABs6gkWoTG45HfeCdjy1blUj9Nqv"; // you got this from the signup page
+        $publickey = ""; // you got this from the signup page
         $captcha = recaptcha_get_html($publickey);
     } else {
         echo 'Already Reviewed';
@@ -641,7 +639,7 @@ function formReview($product_id, $user_id) {
 }
 
 function submitReview($product_id, $rating, $title, $review, $user_id) {
-    $sql = "SELECT * FROM reviews WHERE user_id='$user_id' AND product_id='$product_id'";
+    $sql = "SELECT * FROM gravity_reviews WHERE user_id='$user_id' AND product_id='$product_id'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $count = mysql_num_rows($result);
@@ -651,7 +649,7 @@ function submitReview($product_id, $rating, $title, $review, $user_id) {
         $review = stripcslashes($review);
         $review = mysql_real_escape_string($review);
         require_once('/var/www/class/recaptchalib.php');
-        $privatekey = "6Lf-0roSAAAAACLlnWBuUhOKwuM9w8zpozSuLIpw";
+        $privatekey = "";
         $resp = recaptcha_check_answer ($privatekey,
             $_SERVER["REMOTE_ADDR"],
             $_POST["recaptcha_challenge_field"],
@@ -712,7 +710,7 @@ function submitReview($product_id, $rating, $title, $review, $user_id) {
             // new form
             $selected = 'selected="selected"';
             require_once('/var/www/class/recaptchalib.php');
-            $publickey = "6Lf-0roSAAAAABs6gkWoTG45HfeCdjy1blUj9Nqv"; // you got this from the signup page
+            $publickey = ""; // you got this from the signup page
             echo recaptcha_get_html($publickey);
         }
     } else {
@@ -733,18 +731,18 @@ function addFriend($name, $friend) {
         or die(mysql_error());
     $row = mysql_fetch_array($result);
     $friend_id = $row['user_id'];
-    $sql = "SELECT * FROM friends WHERE user_id='$user_id' AND friend='$friend_id'";
+    $sql = "SELECT * FROM gravity_friends WHERE user_id='$user_id' AND friend='$friend_id'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $count = mysql_num_rows($result);
     $row = mysql_fetch_array($result);
-    $sql1 = "SELECT * FROM friends WHERE user_id='$friend_id' AND friend='$user_id'";
+    $sql1 = "SELECT * FROM gravity_friends WHERE user_id='$friend_id' AND friend='$user_id'";
     $result1 = mysql_query($sql1)
         or die(mysql_error());
     $count1 = mysql_num_rows($result1);
     $row1 = mysql_fetch_array($result1);
     if ($count == 0 && $count1 == 0) {
-        $sql = "INSERT INTO friends (user_id, friend_level, friend) VALUES ('$user_id', '1', '$friend_id')";
+        $sql = "INSERT INTO gravity_friends (user_id, friend_level, friend) VALUES ('$user_id', '1', '$friend_id')";
         $result = mysql_query($sql)
             or die(mysql_error());
         $sql = "SELECT * FROM gravity_users WHERE user_id='$friend_id'";
@@ -753,10 +751,13 @@ function addFriend($name, $friend) {
         $row = mysql_fetch_array($result);
         if ($row['emails'] == 1) {
             $to = $row['email'];
-            $subject = "1stvote.com Friend Added, $name added you as a friend";
-            $message = "$name added you as a friend on 1stvote.com.\nIf you would also like to add $name as a friend and become\nmutual friends click here (or copy and paste url) and click add friend\nafter logging on.\n\nhttp://www.1stvote.com/profile?user=$name\n\nLog on:\nhttp://www.1stvote.com/\n\nTo stop getting emails about friend additions change your email settings at:\nhttp://www.1stvote.com/profile?user=$friend\nAnd click on Edit under email settings\n\n--------------------------------------------------------\nDisclaimer: Internet communications are not secure, and therefore 1stvote.com does not accept legal responsibility for the contents of this message. However, 1stvote.com reserves the right to monitor the transmission of this message and to take corrective action against any misuse or abuse of its e-mail system or other components of its network. The information contained in this e-mail is confidential and may be legally privileged. It is intended solely for the addressee. If you are not the intended recipient, any disclosure, copying, distribution, or any action or act of forbearance taken in reliance on it, is prohibited and may be unlawful. Any views expressed in this e-mail are those of the individual sender. The recipient should check this e-mail for the presence of viruses. 1stvote.com accepts no liability for any damage caused by any viruses transmitted by this e-mail./n";
-            $headers = 'From: noreply@1stvote.com' . "\r\n" .
-            'Reply-To: noreply@1stvote.com' . "\r\n" .
+            $subject = "example.com Friend Added, $name added you as a friend";
+            $message = "$name added you as a friend on example.com.\n
+                        If you would also like to add $name as a friend and become\nmutual friends click here (or copy and paste url) and click add friend\nafter logging on.
+                        \n\nhttp://www.example.com/profile?user=$name\n\nLog on:\nhttp://www.example.com/\n\nTo stop getting emails about friend additions change your email settings at:
+                        \nhttp://www.example.com/profile?user=$friend\nAnd click on Edit under email settings\n\n";
+            $headers = 'From: noreply@example.com' . "\r\n" .
+            'Reply-To: noreply@example.com' . "\r\n" .
             'X-Mailer: PHP/' . phpversion();
             mail($to, $subject, $message, $headers);
         }
@@ -789,12 +790,12 @@ function removeFriend($name, $friend) {
         or die(mysql_error());
     $row = mysql_fetch_array($result);
     $friend_id = $row['user_id'];
-    $sql = "SELECT * FROM friends WHERE user_id='$user_id' AND friend='$friend_id'";
+    $sql = "SELECT * FROM gravity_friends WHERE user_id='$user_id' AND friend='$friend_id'";
     $result = mysql_query($sql)
         or die(mysql_error());
     $count = mysql_num_rows($result);
     $row = mysql_fetch_array($result);
-    $sql1 = "SELECT * FROM friends WHERE user_id='$friend_id' AND friend='$user_id'";
+    $sql1 = "SELECT * FROM gravity_friends WHERE user_id='$friend_id' AND friend='$user_id'";
     $result1 = mysql_query($sql1)
         or die(mysql_error());
     $count1 = mysql_num_rows($result1);
@@ -802,14 +803,14 @@ function removeFriend($name, $friend) {
     if ($count == 0 && $count1 == 0) {
         $ans = 'Already not Friends';
     } elseif ($count == 1 && $count1 == 0) {
-        $sql = "DELETE FROM friends WHERE user_id='$user_id' AND friend='$friend_id' LIMIT 1";
+        $sql = "DELETE FROM gravity_friends WHERE user_id='$user_id' AND friend='$friend_id' LIMIT 1";
         $result = mysql_query($sql);
         $ans = 'Friend Removed';
     } elseif ($count == 1 && $count1 == 1) {
-        $sql = "DELETE FROM friends WHERE user_id='$user_id' AND friend='$friend_id' LIMIT 1";
+        $sql = "DELETE FROM gravity_friends WHERE user_id='$user_id' AND friend='$friend_id' LIMIT 1";
         $result = mysql_query($sql);
         $ans = 'Friend Removed';
-        $sql = "UPDATE friends SET friend_level='1' WHERE user_id='$friend_id' AND friend='$user_id'";
+        $sql = "UPDATE gravity_friends SET friend_level='1' WHERE user_id='$friend_id' AND friend='$user_id'";
         $result = mysql_query($sql)
             or die(mysql_error());
     }
@@ -817,7 +818,7 @@ function removeFriend($name, $friend) {
 }
 
 function checkBlock($site) {
-    $sql8 = "SELECT * FROM block";
+    $sql8 = "SELECT * FROM gravity_block_site";
     $result8 = mysql_query($sql8);
     $match = 0;
     while ($row8 = mysql_fetch_array($result8)) {

@@ -1,5 +1,6 @@
 <?php
 
+
 //SQL vars
 $sql_host = 'localhost';
 $sql_user = 'gravity-user';
@@ -20,5 +21,9 @@ function getHTMLDir() {
     return $html_dir;
 }
 
-
+require_once "$php_dir/class/connection.php";
+require_once "$php_dir/class/dbq.php";
+require_once "$php_dir/class/inputfunctions.php";
+require_once "$php_dir/class/outputfunctions.php";
+require_once "$php_dir/class/displayfunctions.php";
 ?>
