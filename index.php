@@ -6,11 +6,6 @@ if ($_POST['emailpressed']) {
     $subject = mysql_real_escape_string(trim(stripslashes($_POST['subject'])));
     $message = mysql_real_escape_string(trim(stripslashes($_POST['message'])));
     $success = contactCheckSend($email, $subject, $message);
-    if ($success == '2') {
-        $message = '<div class="grid_6 push_9 message-box"><div class="form-msg-success"><h3>Successfully Sent</h3></div></div>';
-    } else {
-        $message = '<div class="grid_6 push_9 message-box"><div class="form-msg-error"><h3>Submission Unsuccessful</h3></div></div>';
-    }
 }
 if ($_GET['page']) {
     $page = mysql_real_escape_string(stripslashes($_GET['page']));

@@ -1,9 +1,7 @@
 <?php
 
 function varProfilePhoto($name) {
-    $sql="SELECT * FROM gravity_users WHERE name='$name'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_users', 'name', $name);
     if ($row['photo']) {
         $photo = $row['photo'].'.jpg';
     } else {
@@ -12,77 +10,8 @@ function varProfilePhoto($name) {
     return $photo;
 }
 
-function displayProfileVar($name) {
-    $sql="SELECT * FROM gravity_users WHERE name='$name'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
-    $user_id = $row['user_id'];
-    if ($row['photo']) {
-        $photo = $row['photo'].'.jpg';
-    } else {
-        $photo = 'default.png';
-    }
-    displayFriends($name);
-    if ($row['facebook']) {
-        $facebook = $row['facebook'];
-    }
-    if ($row['twitter']) {
-        $twitter = $row['twitter'];
-    }
-    if ($row['website']) {
-        $website = $row['website'];
-    }
-    //add friend code
-    if ($_SESSION['user_logged']) {
-        $user_logged = $_SESSION['user_logged'];
-        $user_id = $row['user_id'];
-        $sql2 = "SELECT * FROM gravity_users WHERE name ='$user_logged'";
-        $result2 = mysql_query($sql2)
-            or die(mysql_error());
-        $row2 = mysql_fetch_array($result2);
-        $user_logged_id = $row2['user_id'];
-        $sql3 = "SELECT * FROM friends WHERE user_id='$user_logged_id' AND friend='$user_id'";
-        $result3 = mysql_query($sql3)
-            or die(mysql_error());
-        $count3 = mysql_num_rows($result3);
-        if($_SESSION['user_logged']==$name) {
-        } else {
-            if ($count3 == 0) {
-                $friend_button = 1;
-                //add friend
-            } else {
-                $friend_button = 2;
-                //remove friend
-            }
-        }
-    }
-    
-    if ($_SESSION['user_logged']) {
-        $user_logged = $_SESSION['user_logged'];
-        $user_id = $row['user_id'];
-        $sql2 = "SELECT * FROM gravity_users WHERE name ='$user_logged'";
-        $result2 = mysql_query($sql2)
-            or die(mysql_error());
-        $row2 = mysql_fetch_array($result2);
-        $user_logged_id = $row2['user_id'];
-        $sql3 = "SELECT * FROM friends WHERE user_id='$user_logged_id' AND friend='$user_id'";
-        $result3 = mysql_query($sql3)
-            or die(mysql_error());
-        $count3 = mysql_num_rows($result3);
-        if($_SESSION['user_logged']==$name) {
-        } else {
-            if ($count3 == 0) {
-                 $friend_button = 1;
-                //add friend
-            } else {
-                $friend_button = 2;
-                //remove friend
-            }
-        }
-    }
-}
-
 function varProductPhoto($product_id) {
+    
     $sql="SELECT * FROM products WHERE product_id='$product_id'";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
