@@ -11,10 +11,7 @@ function varProfilePhoto($name) {
 }
 
 function varProductPhoto($product_id) {
-    
-    $sql="SELECT * FROM products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     if ($row['photo']) {
         $photo = $row['photo'];
     } else {
@@ -23,37 +20,27 @@ function varProductPhoto($product_id) {
     return $photo;
 }
 function varProductTitle($product_id) {
-    $sql="SELECT * FROM products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     $title = $row['title'];
     return $title;
 }
 function varProductDescription($product_id) {
-    $sql="SELECT * FROM products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     $description = $row['description'];
     return $description;
 }
 function varProductCompany($product_id) {
-    $sql="SELECT * FROM products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     $company = $row['company'];
     return $company;
 }
 function varProductPrice($product_id) {
-    $sql="SELECT * FROM products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     $price = $row['price'];
     return $price;
 }
 function varProductRating($product_id) {
-    $sql="SELECT * FROM products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     $sum = $row['rating5'] + $row['rating4'] + $row['rating3'] + $row['rating2'] + $row['rating1'];
     $average = 0;
     if ($sum != 0) {
@@ -62,9 +49,7 @@ function varProductRating($product_id) {
     return $average;
 }
 function displayProductVar($product_id) {
-    $sql="SELECT * FROM cms_products WHERE product_id='$product_id'";
-    $result=mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
     $sql_review = "SELECT * FROM reviews WHERE product_id='$product_id'";
     $result_review = mysql_query($sql_review);
     $reviews = mysql_num_rows($result_review);
