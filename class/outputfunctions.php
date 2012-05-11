@@ -25,7 +25,7 @@ function varProductTitle($product_id) {
     return $title;
 }
 function varProductDescription($product_id) {
-    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);
+    $row = dbSelectQuerySimple('*', 'gravity_products', 'product_id', $product_id);   
     $description = $row['description'];
     return $description;
 }

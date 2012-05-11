@@ -21,6 +21,15 @@ function getHTMLDir() {
     return $html_dir;
 }
 
+function getPage() {
+    if ($_GET['page']) {
+        $page = mysql_real_escape_string(stripslashes($_GET['page']));
+    } else {
+        $page = '';
+    }
+    return $page;
+}
+
 require_once "$php_dir/class/connection.php";
 require_once "$php_dir/class/dbq.php";
 require_once "$php_dir/class/inputfunctions.php";
