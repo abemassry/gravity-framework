@@ -316,24 +316,22 @@ function fbLogin($cookie) {
 }
 
 function checkLogin($name, $password) {
-    $name = trim($name);
-    $name = stripslashes($name);
-    $password = stripslashes($password);
-    $name = mysql_real_escape_string($name);
-    $password = mysql_real_escape_string($password);
-    $hash = sha1($password);
-    $sql="SELECT * FROM gravity_users WHERE name='$name' and passwd='$hash'";
+    $slt1 = 'enter your salt here';
+    $hash1 = hash(sha512, sha512, $slt1.$passwd1);
+    for ($i = 0; $i < 10; $i++) {
+        $hash1 = hash(sha512, $hash1);
+    }
+    $sql="SELECT * FROM gravity_users WHERE name='$name' and passwd1='$hash1'";
     $result=mysql_query($sql);
     $count=mysql_num_rows($result);
     if($count==1){
-        $_SESSION['user_logged'] = $name;
         //if(isset($_POST['remember'])){
         //    setcookie("cookname", $_SESSION['user_logged'], time()+60*60*24*60, "/");
         //    setcookie("cookpass", $hash, time()+60*60*24*60, "/");
         //}
         $success1 = 2;
     } else {
-        $success1 = 1;
+        $success1 = 'Wrong username or password';
     }
     return $success1;
 }
